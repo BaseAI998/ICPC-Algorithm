@@ -1,0 +1,54 @@
+#include<bits/stdc++.h>
+#define int long long
+using namespace std;
+inline int read() {
+    int x = 0, f = 1; char ch = getchar();
+    while(ch<'0' || ch>'9') { if(ch=='-') f=-1; ch=getchar(); }
+    while(ch>='0'&&ch<='9') { x=(x<<3)+(x<<1)+(ch^48); ch=getchar(); }
+    return x * f;
+}
+const int N = 1e5+7;
+int n,m;
+vector<int> E[N];
+int timer;
+int tin[N],low[N];
+bool vis[N];
+int ans;
+void Dfs(int u,int fa) {
+	tin[u] = low[u] = ++timer;
+	vis[u] = 1;
+	for(auto v : E[u]) {
+		if(v == fa) continue;
+		if(!vis[v]) {
+			Dfs(v, u);
+			low[u] = min(low[u], low[v]);
+			if(low[v] > tin[u]) {	// u --> v 是割边
+				
+			}
+		}
+		else {
+			low[u] = min(low[u], low[v]);
+		}
+	}
+}
+void solve() {
+	n = read(), m = read();
+	for(int i=1;i<=m;++i) {
+		int u = read(), v = read();
+		E[u].push_back(v);
+		E[v].push_back(u);
+	}
+	ans = 0;
+	Dfs(1, 0);
+	
+	for(int i=1;i<=n;++i) {
+		E[i].clear();
+		tin[i] = low[i] = sz[i] = vis[i] = 0;
+	}
+}
+int main()
+{
+	int T = read();
+	while(T--) solve();
+	return 0;
+}
