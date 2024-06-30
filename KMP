@@ -1,0 +1,38 @@
+const int N = 1e6+7;
+string s,t;	//串从 0 开始 
+int kmp[N];	//kmp[i] 表示i位置的前后缀匹配长度(最)，注意是一个长度 
+void Init() {
+	int len = t.length();
+	for(int i=1;i<len;++i) {
+		int x = kmp[i-1];
+		while(t[i]!=t[x] && x!=0) x = kmp[x-1];
+		if(t[i] == t[x]) kmp[i] = x + 1;
+		else kmp[i] = 0;
+	}
+}
+int main()
+{
+	cin >> s >> t;
+	Init();
+	vector<int> ans;
+	int n = s.length(), len = t.length();
+	int j = 0, cnt = 0;
+	for(int i=0;i<n;++i) {
+		if(s[i] == t[j]) ++j;
+		else {
+			int x = kmp[j-1];
+			while(s[i]!=t[x] && x!=0) x = kmp[x-1];
+			j = x;
+			if(s[i] == t[j]) ++j;
+		}
+		if(j == len) {
+			++cnt;
+			ans.push_back(i-len+2);
+			j = kmp[j-1];
+		}
+	}
+	//printf("%d\n",cnt);
+	for(auto x : ans) printf("%d\n",x);
+	for(int i=0;i<len;++i) printf("%d ",kmp[i]);
+	return 0;
+}
