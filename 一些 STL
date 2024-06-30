@@ -1,0 +1,2 @@
+vector<vector<int> > a(n, vector<int>(m, 0));
+vector<vector<pii> > c(n, vector<pii>(m, mp(0, 0)));
