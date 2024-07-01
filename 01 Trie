@@ -1,42 +1,32 @@
-struct trie {
-    int l, c;
-    vector<array<int, 2>> node;
-    vector<int> cnt;
-    trie(int l, int max_members) : l(l), c(0), node((l + 2) * max_members + 3), cnt((l + 2) * max_members + 3) {}
-    void add(int x) {
-        int cur = 0;
-        for (int i = l; i >= 0; --i) {
-            bool has_bit = (1 << i) & x;
-            if (!node[cur][has_bit]) {
-                node[cur][has_bit] = ++c;
-            }
-            cur = node[cur][has_bit];
-            ++cnt[cur];
-        }
-    }
-    void remove(int x) {
-        int cur = 0;
-        for (int i = l; i >= 0; --i) {
-            bool has_bit = (1 << i) & x;
-            if (!node[cur][has_bit]) {
-                node[cur][has_bit] = ++c;
-            }
-            cur = node[cur][has_bit];
-            --cnt[cur];
-        }
-    }
-    int find_max(int x) {
-        int cur = 0, ans = 0;
-        for (int i = l; i >= 0; --i) {
-            bool has_bit = (1 << i) & x;
-            if (node[cur][!has_bit] && cnt[node[cur][!has_bit]]) {
-                ans += 1 << i;
-                cur = node[cur][!has_bit];
-            }
-            else {
-                cur = node[cur][has_bit];
-            }
-        }
-        return ans;
-    }
-};
+struct Trie {
+	int tot;
+	int cnt[MAXN];
+	int ch[MAXN][2];
+	void Init() {
+		for(int i=0;i<=tot;++i) {
+			cnt[i] = ch[i][0] = ch[i][1] = 0;
+		}
+		tot = 0;
+	}
+	void insert(int x,int k) {
+		int now = 0;
+		for(int i=30;i>=0;--i) {
+			int c = (x>>i)&1;
+			if(!ch[now][c]) ch[now][c] = ++tot;
+			now = ch[now][c];
+			cnt[now] += k;
+		}
+	}
+	int find_max(int x) {
+		int now = 0, res = 0;
+		for(int i=30;i>=0;--i) {
+			int c = (x>>i)&1;
+			if(ch[now][c^1] && cnt[ch[now][c^1]]) now = ch[now][c^1], res |= (1<<i);
+			else {
+				if(!(ch[now][c] && cnt[ch[now][c]])) return -1;
+				now = ch[now][c];
+			}
+		}
+		return res;
+	}
+}
