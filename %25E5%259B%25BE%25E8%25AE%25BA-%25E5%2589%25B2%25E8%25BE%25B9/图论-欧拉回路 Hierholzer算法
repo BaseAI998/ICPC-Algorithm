@@ -1,0 +1,14 @@
+int cur[N];
+int E[N][N];
+vector<int> a;
+void Dfs(int u) {
+	for(int i=cur[u]+1;i<=n;++i) {
+		i = max(i, cur[u]+1);
+		if(E[u][i]) {
+			cur[u] = i;
+			E[u][i] = E[i][u] = 0;
+			Dfs(i);
+		}
+	}
+	a.push_back(P[u]);
+}
