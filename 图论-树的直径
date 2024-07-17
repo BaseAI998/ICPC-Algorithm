@@ -1,0 +1,11 @@
+int d;
+int dp[N];
+void dfs(int u,int fa) {
+	for (auto now : E[u]) {
+		int v = now.first, w = now.second;
+    	if (v == fa) continue;
+    	dfs(v, u);
+		d = max(d, dp[u] + dp[v] + w);
+		dp[u] = max(dp[u], dp[v] + w);
+	}
+}
