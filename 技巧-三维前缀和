@@ -1,0 +1,16 @@
+	for(int i=1;i<=n;++i) {
+		for(int j=1;j<=n;++j) {
+			for(int k=1;k<=n;++k) {
+				if(a[i]==a[j] && a[j]==a[k]) {
+					f[i][j][k] = (d3[i-1][j-1][k-1] + 1) % mod;
+				}
+        // 这题中的原数组即 f[][][] 数组
+        // d1[][][] 是i       这一维上的
+        // d2[][][] 是i，j    这两维上的
+        // d3[][][] 是i, j, k 这三维上的
+				add(d1[i][j][k], (d1[i-1][j][k]+f[i][j][k])%mod);
+				add(d2[i][j][k], (d2[i][j-1][k]+d1[i][j][k])%mod);
+				add(d3[i][j][k], (d3[i][j][k-1]+d2[i][j][k])%mod);
+			}
+		}
+	}
