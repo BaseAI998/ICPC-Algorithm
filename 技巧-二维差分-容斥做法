@@ -1,0 +1,21 @@
+for(int i=1;i<=n;++i) {
+		int x1 = L[i].first, y1 = L[i].second, x2 = R[i].first, y2 = R[i].second;
+		x1 = rkx[x1], x2 = rkx[x2], y1 = rky[y1], y2 = rky[y2];
+		++x1, ++y1;
+  //前面这个 ++x1不要管，这是那个题目的的处理，实际上那个题目是对(x1+1,y1+1), (x2,y2), 这个矩形进行加 1 操作
+  //假设现在对 (x1,y1), (x2,y2), 这个矩形进行加 1 操作
+  //如果是加 k 操作则把 1 改成 k
+		sum[x2+1][y2+1] += 1;  //注意这里是对 (x2+1,y2+1) 这个点 进行+1
+		sum[x1][y2+1] -= 1;
+		sum[x2+1][y1] -= 1;
+		sum[x1][y1] += 1;
+}
+//在这个题中的总矩形边长分别是 totx 和 toty
+//一般可能要改成 n,m
+	for(int i=1;i<=totx;++i) {
+		for(int j=1;j<=toty;++j) {
+			sum[i][j] += sum[i-1][j] + sum[i][j-1] - sum[i-1][j-1];
+      //下面不用管
+			add(cnt[sum[i][j]], (valx[i]-valx[i-1])*(valy[j]-valy[j-1])%mod);
+		}
+	}
