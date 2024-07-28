@@ -1,0 +1,44 @@
+//树上启发式合并
+//先做轻儿子，轻儿子的信息不存直接删，要用的时候再次遍历轻儿子
+//再做重儿子，重儿子的信息保留，重子树不再遍历第二次！
+//时间复杂度证明：任何一个点到根的路径上的轻边不会超过logn条，这个点到根路径上的轻边数就是这个点会被遍历的次数
+//下附 map 写法(相当于每个点维护了一个数组)
+const int N = 1e5+7;
+int n;
+int c[N],cnt[N],ans[N];
+int son[N],sz[N];	//关键数组，记录重儿子 
+map<int,int> t[N];	//map 相当于树上每个结点维护了一个数组
+vector<int> E[N];
+void Dfs(int u,int fa) {
+	sz[u] = 1;
+	for(auto v : E[u]) {
+		if(v == fa) continue;
+		Dfs(v, u);
+		sz[u] += sz[v];
+		if(sz[son[u]] < sz[v]) son[u] = v;	// 找到重儿子 
+	}
+	if(!son[u]) {	//特判叶子 
+		//叶子初始化
+		/*cnt[u] = 1;
+		ans[u] = c[u];*/
+		return ;
+	}
+	swap(t[son[u]], t[u]);	//保留重儿子信息( u结点直接当做一个轻儿子了，反正也只有一个点) 
+	cnt[u] = cnt[son[u]];
+	ans[u] = ans[son[u]];
+	for(auto v : E[u]) {
+		if(v == fa) continue;
+		for(auto now : t[v]) {	//将轻儿子 v 的信息暴力遍历 并插入重儿子 
+			//...
+			//do sth
+			/*t[u][now.first] += now.second;
+			if(t[u][now.first] > cnt[u]) {
+				cnt[u] = t[u][now.first];
+				ans[u] = now.first;
+			} else if(t[u][now.first] == cnt[u]) {
+				ans[u] += now.first;
+			}*/
+		}
+		// 不用clear轻儿子，因为根据前面的证明易得空间复杂度也是 nlogn 的 
+	}
+}
