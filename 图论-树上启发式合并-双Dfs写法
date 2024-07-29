@@ -1,0 +1,63 @@
+const int N = 5e5+7;
+vector<pii> E[N];
+// 以下是 双Dfs树上启发式合并  模板部分
+int n,timer;					//Dfs1关键变量，时间序timer 
+int sz[N],son[N],dfn[N],id[N];	//Dfs1的关键数组 
+int val[N],dep[N],ans[N];		//视题目而定 与答案有关的信息(往往有树上差分)
+int t[1<<23];	//一般都会有的一个权值(颜色、状态)桶数组 
+// Dfs1 预处理出重儿子 和一些要初始化的信息
+void Dfs1(int u,int fa) {
+	// 标准预处理 
+	sz[u] = 1;
+	dfn[u] = ++timer;
+	id[timer] = u;
+	// 视题目而定的预处理  dep[u] = dep[fa] + 1;
+	for(auto x : E[u]) {
+		int v = x.first, w = x.second;
+		if(v == fa) continue;
+		// 视题目而定的预处理 val[v] = val[u] ^ (1 << w); (因为信息在边上，所以在处理顺序是 u->v)
+		// 标准处理 找重儿子 
+		Dfs1(v, u);
+		if(sz[son[u]] < sz[v]) son[u] = v;
+		sz[u] += sz[v];
+	}
+}
+//第二遍Dfs 统计答案 
+void Dfs(int u,int fa,int c) {	// c表示这棵子树是否为重子树，c=0表示是轻子树，则递归结束后信息要被删除 
+	for(auto x : E[u]) {	//先跑轻子树，跑完删除信息 
+		int v = x.first;
+		if(v==fa || v==son[u]) continue;
+		Dfs(v, u, 0);
+		//gmax(ans[u], ans[v]); 若答案是子树内的答案，则要加上这句话；因为每次再u点统计的只有lca(x,y)=u 的答案 
+	}
+	if(son[u]) Dfs(son[u], u, 1);	//再跑重子树，跑完保留信息
+	//gmax(ans[u], ans[son[u]]);	同上
+	if(t[val[u]]) gmax(ans[u], t[val[u]]+dep[u]-2*dep[u]); // 统计u与son[u] 的答案
+	for(int j=0;j<22;++j) {
+		int s = (1<<j);
+		if(t[val[u]^s]) gmax(ans[u], t[val[u]^s]+dep[u]-2*dep[u]);
+	}
+	gmax(t[val[u]], dep[u]);							// 将 u 插入 son[u] 
+	for(auto x : E[u]) {
+		int v = x.first;
+		if(v==fa || v==son[u]) continue;
+		for(int i=dfn[v];i<dfn[v]+sz[v];++i) {	// 统计 v子树内所有点 y 的 lca(x,y)=u 路径的答案 
+			int y = id[i];
+			if(t[val[y]]) gmax(ans[u], t[val[y]]+dep[y]-2*dep[u]);
+			for(int j=0;j<22;++j) {
+				int s = (1<<j);
+				if(t[val[y]^s]) gmax(ans[u], t[val[y]^s]+dep[y]-2*dep[u]);
+			}
+		}
+		for(int i=dfn[v];i<dfn[v]+sz[v];++i) {	// 统计结束，将 y 插入 
+			int y = id[i];
+			gmax(t[val[y]], dep[y]);
+		}
+	}
+	if(c == 0) {								// 轻子树清空信息 
+		for(int i=dfn[u];i<dfn[u]+sz[u];++i) {
+			int y = id[i];
+			t[val[y]] = 0;
+		}
+	}
+}
