@@ -1,0 +1,31 @@
+typedef pair<int,int> pii;
+#define mp(a,b) make_pair(a,b)
+const int N = 1e6+7;
+const int base = 131;
+int Hmod[2] = {(int)1e9+7, (int)1e9+9};
+int pw[2][N];
+void InitHash() {
+	for(int k=0;k<2;++k) {
+		pw[k][0] = 1;
+		for(int i=1;i<N;++i) {
+			pw[k][i] = pw[k][i-1]*base % Hmod[k];
+		}
+	}
+}
+struct Hash {
+	int H[2][N];
+	void Insert(string s) {
+		for(int k=0;k<2;++k) {
+			for(int i=0;i<(int)s.length();++i) {
+				H[k][i] = (i>0 ? H[k][i-1] : 0)*base % Hmod[k];
+			}
+		}
+	}
+	pii Get(int l,int r) {
+		int res[2];
+		for(int k=0;k<2;++k) {
+			res[k] = H[k][r] - (l>0 ? H[k][l-1] : 0)*pw[k][r-l+1]%Hmod[k];
+		}
+		return mp(res[0], res[1]);
+	}
+};
