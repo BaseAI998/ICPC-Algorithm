@@ -1,0 +1,13 @@
+vector<int> P;
+bool vis[N];
+void InitPrime() {
+	vis[1] = 1;
+	for(int i=2;i<N;++i) {
+		if(!vis[i]) P.push_back(i);
+		for(auto p : P) {
+			if(i*p>=N) break;
+			vis[i*p] = 1;
+			if(i%p == 0) break;
+		}
+	}
+}
