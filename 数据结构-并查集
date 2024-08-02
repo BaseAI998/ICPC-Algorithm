@@ -1,0 +1,19 @@
+const int N = 1e5+7;
+struct BJC {
+	int pre[N],sz[N];
+	void Init() {
+		iota(pre+1, pre+1+N, 1);
+		for(int i=1;i<N;++i) sz[i] = 1;
+	}
+	int Find(int x) {
+		return pre[x]==x ? x : pre[x]=Find(pre[x]);
+	}
+	bool Join(int x,int y) {
+		x = Find(x), y = Find(y);
+		if(x == y) return false;
+		if(sz[x] > sz[y]) swap(x, y);
+		pre[x] = y;
+		sz[y] += sz[x];
+		return true;
+	}
+};
