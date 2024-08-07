@@ -1,0 +1,12 @@
+// 该函数可以 输入一个字符串 输出一个KMP数组 
+vector<int> getKMP(string t0) {	//串 t0 从 0 开始 
+	int len = t0.length();	//kmp[i] 表示i位置(0-th)的前后缀最长匹配长度，注意是一个长度 
+	vector<int> kmp(len, 0);
+	for(int i=1;i<len;++i) {
+		int x = kmp[i-1];
+		while(t0[i]!=t0[x] && x!=0) x = kmp[x-1];
+		if(t0[i] == t0[x]) kmp[i] = x + 1;
+		else kmp[i] = 0;
+	}
+	return kmp;
+}
