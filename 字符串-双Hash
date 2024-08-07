@@ -4,7 +4,7 @@ const int N = 1e6+7;
 const int base = 131;
 int Hmod[2] = {(int)1e9+7, (int)1e9+9};
 int pw[2][N];
-void InitHash() {
+void InitHash() {	// 该函数 预处理与Hash有关的 pw数组 
 	for(int k=0;k<2;++k) {
 		pw[k][0] = 1;
 		for(int i=1;i<N;++i) {
@@ -12,16 +12,17 @@ void InitHash() {
 		}
 	}
 }
+// 该结构体可以 储存一个字符串 
 struct Hash {
 	int H[2][N];
-	void Insert(string s) {
+	void Build(string s) {	// Build 是建立该字符串的Hash值 
 		for(int k=0;k<2;++k) {
 			for(int i=0;i<(int)s.length();++i) {
 				H[k][i] = (i>0 ? H[k][i-1] : 0)*base % Hmod[k];
 			}
 		}
 	}
-	pii Get(int l,int r) {
+	pii Get(int l,int r) {	// Get 是得到这个字符串 sl...sr 的双Hash值 (输入一定要 l <= r) 
 		int res[2];
 		for(int k=0;k<2;++k) {
 			res[k] = H[k][r] - (l>0 ? H[k][l-1] : 0)*pw[k][r-l+1]%Hmod[k];
