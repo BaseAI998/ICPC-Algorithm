@@ -1,0 +1,56 @@
+// 维护区间最值个数，可区间加的线段树 
+const int N = 2e5+7;
+typedef pair<int,int> pii;
+struct SegmentTree {
+	int mx[N<<2],cnt[N<<2],lazy[N<<2];
+	#define ls(p) p<<1
+	#define rs(p) p<<1|1
+	void push_up(int p) {
+		mx[p] = max(mx[ls(p)], mx[rs(p)]);
+		cnt[p] = 0;
+		if(mx[p] == mx[ls(p)]) cnt[p] += cnt[ls(p)];
+		if(mx[p] == mx[rs(p)]) cnt[p] += cnt[rs(p)];
+	}
+	void build(int p,int l,int r) {
+		mx[p] = 0; lazy[p] = 0;
+		if(l == r) {
+			cnt[p] = 1; return ;
+		}
+		int mid = (l + r) >> 1;
+		build(ls(p), l, mid);
+		build(rs(p), mid+1, r);
+		push_up(p);
+	}
+	void fl(int p,int y) {	//注意懒标记的修改 
+		mx[p] += y; lazy[p] += y;
+	}
+	void push_down(int p) {	//注意懒标记的传递 
+		fl(ls(p), lazy[p]);
+		fl(rs(p), lazy[p]);
+		lazy[p] = 0;
+	}
+	void update(int p,int l,int r,int nl,int nr,int y) {	//对区间 [nl,nr] 进行修改 
+		if(nl<=l && r<=nr) {
+			mx[p] += y; lazy[p] += y;
+			return ;
+		}
+		push_down(p);	//Note!!! 
+		int mid = (l + r) >> 1;
+		if(nl <=mid) update(ls(p), l, mid, nl, nr, y);
+		if(nr > mid) update(rs(p), mid+1, r, nl, nr, y);
+		push_up(p);
+	}
+	pii query(int p,int l,int r,int ql,int qr) {	//查询区间[ql,qr] 的最值以及最值出现的次数 
+		if(ql<=l && r<=qr) return mp(mx[p], cnt[p]);
+		push_down(p);	//Note!!!
+		int mid = (l + r) >> 1;
+		int nowmx = 0, nowcnt = 0;
+		pii tmpl = mp(0, 0), tmpr = mp(0, 0);
+		if(ql <=mid) tmpl = query(ls(p), l, mid, ql, qr);
+		if(qr > mid) tmpr = query(rs(p), mid+1, r, ql, qr);
+		nowmx = max(tmpl.first, tmpr.first);
+		if(nowmx == tmpl.first) nowcnt += tmpl.second;
+		if(nowmx == tmpr.first) nowcnt += tmpr.second;
+		return mp(nowmx, nowcnt);
+	}
+}T;
