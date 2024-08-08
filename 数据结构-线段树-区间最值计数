@@ -11,7 +11,7 @@ struct SegmentTree {
 		if(mx[p] == mx[ls(p)]) cnt[p] += cnt[ls(p)];
 		if(mx[p] == mx[rs(p)]) cnt[p] += cnt[rs(p)];
 	}
-	void build(int p,int l,int r) {
+	void build(int p,int l,int r) {	//注意一开始要建树，这样cnt才是对的 
 		mx[p] = 0; lazy[p] = 0;
 		if(l == r) {
 			cnt[p] = 1; return ;
@@ -31,10 +31,10 @@ struct SegmentTree {
 	}
 	void update(int p,int l,int r,int nl,int nr,int y) {	//对区间 [nl,nr] 进行修改 
 		if(nl<=l && r<=nr) {
-			mx[p] += y; lazy[p] += y;
+			fl(p, y);
 			return ;
 		}
-		push_down(p);	//Note!!! 
+		push_down(p);	//注意下传懒标记 
 		int mid = (l + r) >> 1;
 		if(nl <=mid) update(ls(p), l, mid, nl, nr, y);
 		if(nr > mid) update(rs(p), mid+1, r, nl, nr, y);
@@ -42,7 +42,7 @@ struct SegmentTree {
 	}
 	pii query(int p,int l,int r,int ql,int qr) {	//查询区间[ql,qr] 的最值以及最值出现的次数 
 		if(ql<=l && r<=qr) return mp(mx[p], cnt[p]);
-		push_down(p);	//Note!!!
+		push_down(p);	//注意下传懒标记
 		int mid = (l + r) >> 1;
 		int nowmx = 0, nowcnt = 0;
 		pii tmpl = mp(0, 0), tmpr = mp(0, 0);
