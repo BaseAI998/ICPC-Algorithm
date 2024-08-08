@@ -1,0 +1,27 @@
+// P 是线性筛质数中的 质数集合(保存 N 以内的质数) 
+vector<pii> get(int y) {	//求出一个数 y 的质因数集合并返回 
+	vector<pii> vec;	//vec 中的元素用一对 pii 来存，first 表示质数 p_i， second 表示该质数出现的次数 α_i
+	for(auto p : P) {
+		if(y == 1) break;
+		if(y%p == 0) vec.push_back(mp(p, 0ll));
+		while(y%p == 0) {
+			++vec.back().second;
+			y /= p;
+		}
+	}
+	if(y > 1) vec.push_back(mp(y, 1));	//如果值域 <= N*N，那么大于 N 的质数最多只有一个 
+	return vec;
+}
+// a = get(n)
+// a 数组现在是 n 的质因数集合
+void Dfs(int dep,int x) {	//已得到质因数集合，利用Dfs 求得n的所有约数
+	if(dep == (int)a.size()) {
+		// do sth, 	此时的 x 即为 n 的一个约数 
+		return ;
+	}
+	int pw = 1;
+		for(int i=0;i<=a[dep].second;++i) {
+		Dfs(dep+1, x*pw);
+		pw *= a[dep].first;
+	}
+}
