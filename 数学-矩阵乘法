@@ -1,20 +1,40 @@
 const int mod = 1e9+7;
 const int N = 107;
 struct MAT {
-    int v[N][N];
-    MAT() {
-        memset(v, 0, sizeof(v));
+    int val[N][N];
+    MAT() {	// 初始化矩阵为 0 
+        memset(val, 0, sizeof(val));
     }
+    void Init() {	//Init() 制造单位矩阵 
+    	for(int i=0;i<n;++i) val[i][i] = 1;
+	}
+	void Print() {	//打印矩阵 
+		for(int i=0;i<n;++i) {
+			for(int j=0;j<n;++j) {
+				cout << val[i][j] << " ";
+			}
+			cout << endl;
+		}
+	}
 };
 int n;
-MAT operator * (const MAT &a, const MAT &b) {
+MAT operator * (const MAT &a, const MAT &b) {	//矩阵乘法 
     MAT c;
-    for(int k=0;k<n;++k) {
+    for(int k=0;k<n;++k) {	// 这个 n 是由题目要求而取得的矩阵大小
         for(int i=0;i<n;++i) {
             for(int j=0;j<n;++j) {
-                c.v[i][j] = (c.v[i][j] + a.v[i][k]*b.v[k][j]%mod) % mod;
+                c.val[i][j] = (c.val[i][j] + a.val[i][k]*b.val[k][j]%mod) % mod;
             }
         }
     }
     return c;
+}
+MAT operator + (const MAT &a, const MAT &b) {	//矩阵加法
+	MAT c;
+	for(int i=0;i<n;++i) {
+		for(int j=0;j<n;++j) {
+			c.val[i][j] = (a.val[i][j] + b.val[i][j]) % mod;
+		}
+	}
+	return c;
 }
