@@ -1,14 +1,9 @@
-#define mp(a,b) make_pair(a,b)
-typedef pair<int,int> pii;
-const int N = 2e5+7;
-const int INF = 1e18;
-int n,m;
-int a[N],dist[N],vis[N];
-vector<pii> E[N];
-void Dijkstra() {
+//Dijkstra
+int dist[N],vis[N];
+void Dijkstra(int start) {  //从start开始的单源最短路
 	priority_queue<pii> q;
 	for(int i=1;i<=n;++i) dist[i] = INF;
-	dist[1] = a[1];
+	dist[start] = 0;
 	q.push(mp(-dist[1], 1));
 	while(!q.empty()) {
 		int u = q.top().second;
@@ -17,8 +12,8 @@ void Dijkstra() {
 		vis[u] = 1;
 		for(auto to : E[u]) {
 			int v = to.first, w = to.second;
-			if(dist[u]+w+a[v] < dist[v]) {
-				dist[v] = dist[u]+w+a[v];
+			if(dist[u]+w < dist[v]) {
+				dist[v] = dist[u]+w;
 				q.push(mp(-dist[v], v));
 			}
 		}
