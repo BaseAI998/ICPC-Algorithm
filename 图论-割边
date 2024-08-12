@@ -1,54 +1,30 @@
-#include<bits/stdc++.h>
-#define int long long
-using namespace std;
-inline int read() {
-    int x = 0, f = 1; char ch = getchar();
-    while(ch<'0' || ch>'9') { if(ch=='-') f=-1; ch=getchar(); }
-    while(ch>='0'&&ch<='9') { x=(x<<3)+(x<<1)+(ch^48); ch=getchar(); }
-    return x * f;
-}
-const int N = 1e5+7;
-int n,m;
-vector<int> E[N];
-int timer;
-int tin[N],low[N];
-bool vis[N];
-int ans;
-void Dfs(int u,int fa) {
-	tin[u] = low[u] = ++timer;
-	vis[u] = 1;
+// 无向图割边
+// 被割边分割的联通块就是边双，每个点对之间有两条路径
+int timer;  //dfs时tin的时间戳
+int tin[N],low[N]; //tin 就是时间戳，low是绕过fa能到的最小时间戳
+bool vis[N];       //vis记录是否是已经走过的点
+//一遍Dfs的过程中可以处理出哪些边是割边
+void Dfs(int u,int fa) {    // u是当前结点，fa是u在搜索树上的父亲
+	tin[u] = low[u] = ++timer;  //第一次遍历到这个点 tin=low=当前的timer
+	vis[u] = 1;                 //给这个点打上标记
 	for(auto v : E[u]) {
-		if(v == fa) continue;
-		if(!vis[v]) {
+		if(v == fa) continue;   
+		if(!vis[v]) {           //如果没搜过就继续搜
 			Dfs(v, u);
-			low[u] = min(low[u], low[v]);
+			low[u] = min(low[u], low[v]);   //递归更新
 			if(low[v] > tin[u]) {	// u --> v 是割边
 				
 			}
-		}
-		else {
+		} else {    //如果是 u在搜索树上的祖先，则尝试更新low
 			low[u] = min(low[u], low[v]);
 		}
 	}
 }
-void solve() {
-	n = read(), m = read();
-	for(int i=1;i<=m;++i) {
-		int u = read(), v = read();
-		E[u].push_back(v);
-		E[v].push_back(u);
-	}
-	ans = 0;
-	Dfs(1, 0);
-	
-	for(int i=1;i<=n;++i) {
+void Clear(int n) { //n 是该组数据的大小
+//需要清空的有，timer, E, tin, low, vis
+    timer = 0;
+    for(int i=1;i<=n;++i) {
 		E[i].clear();
-		tin[i] = low[i] = sz[i] = vis[i] = 0;
+		tin[i] = low[i] = vis[i] = 0;
 	}
-}
-int main()
-{
-	int T = read();
-	while(T--) solve();
-	return 0;
 }
