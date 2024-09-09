@@ -1,0 +1,38 @@
+const int N = 507;
+int n,m,e;  
+//左边的点数为n，右边的点数为m，边数为e
+//左边的点编号为 1~n，右边的点编号为 1~m
+int vis[N],match[N];
+vector<int> E[N];   //建图时建单向边，从左到右
+bool Dfs(int u) {
+    for(auto v : E[u]) {
+        if(!vis[v]) {
+            vis[v] = 1;
+            if(!match[v] || Dfs(match[v])) {
+                match[v] = u;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+int MaxMatch() {
+    int res = 0;
+    for(int i=1;i<=n;++i) {
+        memset(vis, 0, sizeof(vis));
+        if(Dfs(i)) ++res;
+    }
+    return res;
+}
+/*
+4 2 7
+3 1
+1 2
+3 2
+1 1
+4 2
+4 1
+1 1
+
+2
+*/
