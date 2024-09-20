@@ -25,3 +25,15 @@ void Init() {
 		}
 	}
 }
+
+//O(n) 预处理, O(1) 组合数
+void Init() {
+    jc[0] = 1;
+    for(int i=1;i<N;++i) jc[i] = jc[i-1]*i % mod;
+    ijc[N-1] = Inv(jc[N-1]);
+    for(int i=N-2;i>=0;--i) ijc[i] = ijc[i+1]*(i+1) % mod;
+}
+int C(int x,int y) {
+    if(x < y) return 0;
+    return jc[x]*ijc[y]%mod*ijc[x-y]%mod;
+}
