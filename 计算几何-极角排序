@@ -1,0 +1,27 @@
+struct Point {
+    int x, y;
+    void in() { // read int
+        x = read(), y = read();
+    }
+    int operator ^ (const Point &el) const {
+        return x*el.y - el.x*y;
+    }
+};
+
+//to-left 测试，但只能对于半平面（开区间）进行排序，因此把全平面划分为 下半平面 < 原点+x正半轴 < 上半平面 < x负半轴
+bool cmp(Point a, Point b) {  
+    auto quad = [](const Point &a) {
+        if(a.y < 0) return 1;
+        else if(a.y > 0) return 3;
+        else {
+            if(a.x >= 0) return 2;
+            return 4;
+        }
+    };
+    int qa = quad(a), qb = quad(b);
+    if(qa == qb) {
+        if((a^b) == 0) return a.x < b.x;
+        return (a^b) > 0;
+    }
+    return qa < qb;
+}
