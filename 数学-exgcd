@@ -15,3 +15,9 @@ $x = x_0 + n\frac{b}{d}$
 $y = y_0 - n\frac{a}{d}$
 $n \in \N$
 */
+int ceildiv(int x,int y) {
+    return ceil((double)x / (double)y);
+}
+int floordiv(int x,int y) {
+    return floor((double)x / (double)y);
+}
