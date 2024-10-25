@@ -1,24 +1,50 @@
+const double eps = 1e-8;
 struct Point {
-    int x, y;
-    void in() { // read int
+    double x,y;
+    Point(double _x=0,double _y=0) {
+        x = _x, y = _y;
+    }
+    void in() {
         x = read(), y = read();
     }
-    int operator ^ (const Point &el) const {
-        return x*el.y - el.x*y;
-    }
-    int operator * (const Point &el) const {
-        return x*el.x + y*el.y;
+    Point operator + (const Point &el) const {
+        return (Point){x+el.x, y+el.y};
     }
     Point operator - (const Point &el) const {
-        return Point{x-el.x, y-el.y};
+        return (Point){x-el.x, y-el.y};
     }
-    int len2() {
+    double operator ^ (const Point &el) const {
+        return x*el.y - y*el.x;
+    }
+    double operator * (const Point &el) const {
+        return x*el.x + y*el.y;
+    }
+    Point operator * (double k) const {
+        return (Point){x*k, y*k};
+    }
+    double len2() {
         return (*this) * (*this);
     }
     double len() {
         return sqrt(len2());
     }
+    void Print() {
+        printf("%.12lf %.12lf\n",x, y);
+    }
 };
+Point mul(Point v,double k) {    //数乘，前面也有
+    return (Point){v.x*k, v.y*k};
+}
+double S(Point A,Point B,Point C) {    //三角形ABC的面积
+    return 0.5 * fabs(((B-A)^(C-A)));
+}
+int sign(double x) {
+    if(fabs(x) < eps) return 0;
+    return (x < 0) ? -1 : 1;
+}
+int dcmp(double x,double y) {
+    return sign(x - y);
+}
 
 // 以下是俊杰的板子
 const long long eps=0;
