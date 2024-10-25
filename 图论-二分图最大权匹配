@@ -1,0 +1,122 @@
+struct Match {
+    int n;
+    vector<int> matchx;
+    vector<int> matchy;
+    vector<int> pre;
+    vector<bool> visx;
+    vector<bool> visy;
+    vector<int> lx;
+    vector<int> ly;
+    vector<vector<int> > g;
+    vector<int> slack;
+    int inf;
+    int res;
+    queue<int> q;
+    int org_n;
+    int org_m;
+
+    Match(int _n,int _m) {
+        org_n = _n;
+        org_m = _m;
+        n = max(_n, _m);
+        inf = numeric_limits<int>::max();
+        res = 0;
+        g = vector<vector<int> >(n, vector<int>(n));
+        matchx = vector<int>(n, -1);
+        matchy = vector<int>(n, -1);
+        pre = vector<int>(n);
+        visx = vector<bool>(n);
+        visy = vector<bool>(n);
+        lx = vector<int>(n, -inf);
+        ly = vector<int>(n);
+        slack = vector<int>(n);
+    }
+    
+    void addEdge(int u,int v,int w) {
+        g[u][v] = max(w, 0ll);
+    }
+
+    bool check(int v) {
+        visy[v] = true;
+        if(matchy[v] != -1) {
+            q.push(matchy[v]);
+            visx[matchy[v]] = true;
+            return false;
+        }
+        while(v != -1) {
+            matchy[v] = pre[v];
+            swap(v, matchx[pre[v]]);
+        }
+        return true;
+    }
+
+    void Bfs(int i) {
+        while(!q.empty()) {
+            q.pop();
+        }
+        q.push(i);
+        visx[i] = true;
+        while(true) {
+            while(!q.empty()) {
+                int u = q.front();
+                q.pop();
+                for(int v=0;v<n;++v) {
+                    if(!visy[v]) {
+                        int delta = lx[u] + ly[v] - g[u][v];
+                        if(slack[v] >= delta) {
+                            pre[v] = u;
+                            if(delta) {
+                                slack[v] = delta;
+                            } else if(check(v)) {
+                                return ;
+                            }
+                        }
+                    }
+                }
+            }
+            int a = inf;
+            for(int j=0;j<n;++j) {
+                if(!visy[j]) {
+                    a = min(a, slack[j]);
+                }
+            }
+            for(int j=0;j<n;++j) {
+                if(visx[j]) {
+                    lx[j] -= a;
+                }
+                if(visy[j]) {
+                    ly[j] += a;
+                } else {
+                    slack[j] -= a;
+                }
+            }
+            for(int j=0;j<n;++j) {
+                if(!visy[j] && slack[j]==0 && check(j)) {
+                    return ;
+                }
+            }
+        }
+    }
+
+    int solve() {  //返回最大权匹配的值
+        for(int i=0;i<n;++i) {
+            for(int j=0;j<n;++j) {
+                lx[i] = max(lx[i], g[i][j]);
+            }
+        }
+        for(int i=0;i<n;++i) {
+            fill(slack.begin(), slack.end(), inf);
+            fill(visx.begin(), visx.end(), false);
+            fill(visy.begin(), visy.end(), false);
+            Bfs(i);
+        }
+        for(int i=0;i<n;++i) {
+            if(g[i][matchx[i]] > 0) {
+                res += g[i][matchx[i]];
+            } else {
+                matchx[i] = -1;
+            }
+        }
+        return res;
+    }
+};
