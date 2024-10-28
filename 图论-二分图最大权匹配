@@ -1,3 +1,5 @@
+//KM 算法
+//时间复杂度 O(n^3)
 struct Match {
     int n;
     vector<int> matchx;
