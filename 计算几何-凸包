@@ -1,3 +1,5 @@
+//凸包模板 O(nlogn)
+//传入一个点集，输出凸包点集，逆时针排布
 const double eps = 1e-8;
 struct Point {
     double x,y;
@@ -33,7 +35,7 @@ vector<Point> convexhull(vector<Point> P) {
     sort(P.begin(), P.end());
     const auto check = [](const vector<Point> &st,const Point &p) {
         const auto back1 = st.back(),back2 = *(prev(st.end(),2));
-        return (back1-back2).toleft(p-back2) <= 0;
+        return (back1-back2).toleft(p-back2) <= 0;    //把 <= 改成 < 就会多点共线保留多点，否则保留端点
     };
     for(auto p : P) {
         while(st.size()>1 && check(st, p)) st.pop_back();
