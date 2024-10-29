@@ -3,7 +3,7 @@ struct Point {
     void in() { // read int
         x = read(), y = read();
     }
-    int operator ^ (const Point &el) const {
+    int operator ^ (const Point &el) const {    //注意检查叉乘和点乘是否会爆 int/ ll
         return x*el.y - el.x*y;
     }
 };
