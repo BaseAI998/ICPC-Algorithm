@@ -13,10 +13,10 @@ struct Point {
     Point operator - (const Point &el) const {
         return (Point){x-el.x, y-el.y};
     }
-    double operator ^ (const Point &el) const {
+    double operator ^ (const Point &el) const {    //注意检查叉乘和点乘是否会爆 int/ ll
         return x*el.y - y*el.x;
-    }
-    double operator * (const Point &el) const {
+    }   
+    double operator * (const Point &el) const {    //
         return x*el.x + y*el.y;
     }
     Point operator * (double k) const {
