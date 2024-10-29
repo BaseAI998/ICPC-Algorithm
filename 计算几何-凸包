@@ -10,7 +10,7 @@ struct Point {
         if(x == el.x) return y < el.y;
         return x < el.x;
     }
-    Point operator - (const Point &el) const {
+    Point operator - (const Point &el) const {    //注意检查叉乘和点乘是否会爆 int/ ll
         return (Point){x-el.x, y-el.y};
     }
     double operator ^ (const Point &el) const {
