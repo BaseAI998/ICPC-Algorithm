@@ -1,0 +1,51 @@
+const double eps = 1e-8;
+struct Point {
+    double x,y;
+    Point(double _x=0,double _y=0) {
+        x = _x, y = _y;
+    }
+    bool operator < (const Point &el) const {
+        if(x == el.x) return y < el.y;
+        return x < el.x;
+    }
+    Point operator - (const Point &el) const {
+        return (Point){x-el.x, y-el.y};
+    }
+    double operator ^ (const Point &el) const {
+        return x*el.y - y*el.x;
+    }
+    double operator * (const Point &el) const {
+        return x*el.x + y*el.y;
+    }
+    double len2() {
+        return (*this) * (*this);
+    }
+    double len() {
+        return sqrt(len2());
+    }
+    int toleft(const Point &el) const {
+        auto t = (*this) ^ el;
+        return (t>eps) - (t<-eps);
+    }
+};
+vector<Point> convexhull(vector<Point> P) {
+    vector<Point> st;
+    sort(P.begin(), P.end());
+    const auto check = [](const vector<Point> &st,const Point &p) {
+        const auto back1 = st.back(),back2 = *(prev(st.end(),2));
+        return (back1-back2).toleft(p-back2) <= 0;
+    };
+    for(auto p : P) {
+        while(st.size()>1 && check(st, p)) st.pop_back();
+        st.push_back(p);
+    }
+    int k=st.size();
+    P.pop_back();
+    reverse(P.begin(),P.end());
+    for(auto p : P) {
+        while(st.size()>k && check(st, p)) st.pop_back();
+        st.push_back(p);
+    }
+    st.pop_back();
+    return st;
+}
