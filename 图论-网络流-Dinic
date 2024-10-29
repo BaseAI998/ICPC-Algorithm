@@ -1,12 +1,13 @@
 // Dinic
 // 在普通图上的时间复杂度是 O(V^2*E)，在单位容量图上的时间复杂度是 O(sqrt(V)*E)
 const int N = 1e5+7;
+const int M = 1e5+7;    //注意边数和点数不同
 const int INF = 1e9;
 class Flow {
 private :
     struct Edge {
         int next, to, cap, flow;
-    } edge[N<<1];
+    } edge[M<<1];
     int head[N], cnt = 0;
 public :
     int n, S, T;
