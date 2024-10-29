@@ -13,7 +13,7 @@ public :
     long long maxflow = 0;
     int dep[N], cur[N];
 
-    void Init() {
+    void Init() {    //要在addEdge之前Init head
         memset(head, -1, sizeof(int)*(n+1));
         cnt = 0;
     }
