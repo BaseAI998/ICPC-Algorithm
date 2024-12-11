@@ -1,0 +1,12 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+    while(1) {
+        system("data.exe > data.txt");
+        system("std.exe < data.txt > std.txt");
+        system("A.exe < data.txt > my.txt");
+        if(system("fc my.txt std.txt")) break;
+    }
+    return 0;
+}
